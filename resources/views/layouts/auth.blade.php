@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Sarang Walet</title>
+    <title>Klinik Sehat Pahlawan</title>
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('auth/assets/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('auth/assets/bundles/bootstrap-social/bootstrap-social.css') }}">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ asset('auth/assets/css/components.css') }}">
     <!-- Custom style CSS -->
     <link rel="stylesheet" href="{{ asset('auth/assets/css/custom.css') }}">
-    <link rel="icon" href="admin/assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="custom/logo.jpeg" type="image/x-icon" />
 </head>
 
 <body>
