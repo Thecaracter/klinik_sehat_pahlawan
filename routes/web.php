@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PasienController;
 use App\Http\Controllers\DashboardController;
 
 /*
@@ -27,5 +28,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::get('/users', [UserController::class, 'index'])->name('user.index');
 Route::post('/users', [UserController::class, 'store'])->name('user.store');
 Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+Route::get('/pasien', [PasienController::class, 'index'])->name('pasiens.index');
+Route::post('/pasien', [PasienController::class, 'store'])->name('pasiens.store');
+Route::put('/pasien/{nik}', [PasienController::class, 'update'])->name('pasiens.update');
+Route::delete('/pasien/{nik}', [PasienController::class, 'destroy'])->name('pasiens.destroy');
 
 

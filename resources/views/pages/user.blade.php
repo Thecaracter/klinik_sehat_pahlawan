@@ -14,8 +14,11 @@
                             </button>
                         </div>
                         <div class="card-body">
+                            <div class="mb-3">
+                                <input type="text" id="searchInput" class="form-control" placeholder="Cari user...">
+                            </div>
                             <div id="results" class="table-responsive">
-                                <table class="display table table-striped table-hover">
+                                <table id="userTable" class="display table table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th class="px-4 py-2">Username</th>
@@ -149,5 +152,36 @@
                 html: '@foreach ($errors->all() as $error){{ $error }}<br>@endforeach',
             });
         @endif
+
+        // DOM Search
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const table = document.getElementById('userTable');
+            const rows = table.getElementsByTagName('tr');
+
+            searchInput.addEventListener('keyup', function() {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    const cells = row.getElementsByTagName('td');
+                    let found = false;
+
+                    for (let j = 0; j < cells.length; j++) {
+                        const cellText = cells[j].textContent.toLowerCase();
+                        if (cellText.indexOf(searchTerm) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (found) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
     </script>
 @endsection
