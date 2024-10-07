@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{ asset('auth/assets/css/components.css') }}">
     <!-- Custom style CSS -->
     <link rel="stylesheet" href="{{ asset('auth/assets/css/custom.css') }}">
-    <link rel="icon" href="custom/logo.jpeg" type="image/x-icon" />
+    <link rel="icon" href="custom/assetFoto/logo.jpeg" type="image/x-icon" />
 </head>
 
 <body>

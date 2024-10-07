@@ -5,6 +5,14 @@
         <div class="container mt-5">
             <div class="row">
                 <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
+                    <!-- Logo -->
+                    <div class="text-center mb-4">
+                        <div class="d-inline-block rounded-circle border border-dark shadow"
+                            style="width: 100px; height: 100px; overflow: hidden;">
+                            <img src="{{ asset('custom/assetsFoto/logo.jpeg') }}" alt="Logo" class="img-fluid w-100 h-100"
+                                style="object-fit: cover;">
+                        </div>
+                    </div>
                     <div class="card card-primary">
                         <div class="card-header text-center">
                             <h4 class="text-center">Login</h4>
