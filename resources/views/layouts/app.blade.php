@@ -6,6 +6,7 @@
     <title>@yield('title', 'Default Title')</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="{{ asset('admin/assets/img/kaiadmin/favicon.ico') }}" type="image/x-icon" />
+    <link rel="stylesheet" href="{{ asset('custom/css/pagination.css') }}" />
 
     <!-- Fonts and icons -->
     <script src="{{ asset('admin/assets/js/plugin/webfont/webfont.min.js') }}"></script>

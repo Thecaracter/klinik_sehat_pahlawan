@@ -21,9 +21,10 @@ class PasienController extends Controller
                     ->orWhere('alamat', 'LIKE', "%{$search}%");
             }
 
-            $pasiens = $query->paginate(10); // Ubah angka sesuai kebutuhan
+            $pasiens = $query->paginate(10);
+            $satuanOptions = ['Tablet', 'Kapsul', 'Botol', 'Ampul', 'Vial', 'Tube', 'Sachet', 'Strip'];
 
-            return view('pages.pasien', compact('pasiens'));
+            return view('pages.pasien', compact('pasiens', 'satuanOptions'));
         } catch (Exception $e) {
             Log::error('Error fetching pasiens: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan saat mengambil data pasien.');

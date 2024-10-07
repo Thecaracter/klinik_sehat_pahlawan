@@ -7,7 +7,7 @@
                 <img src="{{ asset('custom/assetsFoto/logo.jpeg') }}" alt="Logo Klinik" class="logo-fluid"
                     style="height: 50px; width: auto; margin-right: 15px;margin-left: 15px;">
                 <span class="brand-text" style="color: white; font-size: 20px; font-weight: bold; line-height: 1.2;">
-                    Klinik Sehat<br>Pahlawan
+                    Griya Sehat<br>Pahlawan
                 </span>
             </a>
             <div class="nav-toggle">
@@ -57,11 +57,23 @@
                         <p>Pasien</p>
                     </a>
                 </li>
+                <li class="nav-item {{ Request::path() == 'obat' ? 'active' : '' }}">
+                    <a href="{{ url('obat') }}">
+                        <i class="fas fa-pills"></i>
+                        <p>Obat</p>
+                    </a>
+                </li>
                 <li class="nav-section">
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
                     </span>
-                    <h4 class="text-section">Order Menu</h4>
+                    <h4 class="text-section">SubMenu</h4>
+                </li>
+                <li class="nav-item {{ Request::path() == 'obatmasuk' ? 'active' : '' }}">
+                    <a href="{{ url('obatmasuk') }}">
+                        <i class="fas fa-pills"></i>
+                        <p>Obat Masuk</p>
+                    </a>
                 </li>
                 <li class="nav-item {{ Request::path() == 'admin/pesanan' ? 'active' : '' }}">
                     <a href="{{ url('admin/pesanan') }}">

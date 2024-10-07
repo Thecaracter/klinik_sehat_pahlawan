@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Daftar Pasien')
+@section('title', 'Daftar Obat')
 @section('content')
     <div class="container">
         <div class="page-inner">
@@ -7,17 +7,16 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h4 class="card-title">Daftar Pasien</h4>
-                            <button type="button" class="btn btn-success" data-toggle="modal"
-                                data-target="#createPasienModal">
-                                <i class="fa fa-plus"></i> Tambah Pasien
+                            <h4 class="card-title">Daftar Obat</h4>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#createObatModal">
+                                <i class="fa fa-plus"></i> Tambah Obat
                             </button>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('pasiens.index') }}" method="GET" class="mb-3">
+                            <form action="{{ route('obat.index') }}" method="GET" class="mb-3">
                                 <div class="input-group">
                                     <input type="text" class="form-control" name="search"
-                                        placeholder="Cari berdasarkan NIK, Nama, atau Alamat"
+                                        placeholder="Cari berdasarkan Kode Obat, Nama, atau Merk"
                                         value="{{ request('search') }}">
                                     <div class="input-group-append">
                                         <button class="btn btn-primary" type="submit">Cari</button>
@@ -39,41 +38,43 @@
                                 <table class="display table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th class="px-4 py-2">NIK</th>
+                                            <th class="px-4 py-2">Kode Obat</th>
                                             <th class="px-4 py-2">Nama</th>
-                                            <th class="px-4 py-2">Umur</th>
-                                            <th class="px-4 py-2">Alamat</th>
-                                            <th class="px-4 py-2">No HP</th>
+                                            <th class="px-4 py-2">Merk</th>
+                                            <th class="px-4 py-2">Jenis</th>
+                                            <th class="px-4 py-2">Stok</th>
+                                            <th class="px-4 py-2">Harga</th>
                                             <th class="px-4 py-2">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if ($pasiens->isEmpty())
+                                        @if ($obat->isEmpty())
                                             <tr>
-                                                <td colspan="6" class="text-center">Tidak ada data pasien untuk
+                                                <td colspan="7" class="text-center">Tidak ada data obat untuk
                                                     ditampilkan</td>
                                             </tr>
                                         @else
-                                            @foreach ($pasiens as $pasien)
+                                            @foreach ($obat as $item)
                                                 <tr>
-                                                    <td>{{ $pasien->nik }}</td>
-                                                    <td>{{ $pasien->nama }}</td>
-                                                    <td>{{ \Carbon\Carbon::parse($pasien->tanggal_lahir)->age }} tahun</td>
-                                                    <td>{{ $pasien->alamat }}</td>
-                                                    <td>{{ $pasien->no_hp }}</td>
+                                                    <td>{{ $item->kode_obat }}</td>
+                                                    <td>{{ $item->nama }}</td>
+                                                    <td>{{ $item->merk }}</td>
+                                                    <td>{{ $item->jenis }}</td>
+                                                    <td>{{ $item->formatStok() }}</td>
+                                                    <td>{{ number_format($item->harga, 0, ',', '.') }}</td>
                                                     <td>
                                                         <div class="btn-group" role="group">
                                                             <button type="button" class="btn btn-sm btn-warning"
                                                                 data-toggle="modal"
-                                                                data-target="#editPasienModal{{ $pasien->nik }}">
+                                                                data-target="#editObatModal{{ $item->id }}">
                                                                 Edit
                                                             </button>
                                                             <button class="btn btn-sm btn-danger"
-                                                                onclick="confirmDelete('{{ $pasien->nik }}')">Hapus</button>
+                                                                onclick="confirmDelete('{{ $item->id }}')">Hapus</button>
                                                         </div>
-                                                        <form id="delete-form-{{ $pasien->nik }}"
-                                                            action="{{ route('pasiens.destroy', $pasien->nik) }}"
-                                                            method="POST" style="display: none;">
+                                                        <form id="delete-form-{{ $item->id }}"
+                                                            action="{{ route('obat.destroy', $item->id) }}" method="POST"
+                                                            style="display: none;">
                                                             @csrf
                                                             @method('DELETE')
                                                         </form>
@@ -84,24 +85,24 @@
                                     </tbody>
                                 </table>
                             </div>
-                            @if ($pasiens->hasPages())
+                            @if ($obat->hasPages())
                                 <nav>
                                     <ul class="pagination">
                                         {{-- Previous Page Link --}}
-                                        @if ($pasiens->onFirstPage())
+                                        @if ($obat->onFirstPage())
                                             <li class="page-item disabled">
                                                 <span class="page-link">&laquo;</span>
                                             </li>
                                         @else
                                             <li class="page-item">
-                                                <a class="page-link" href="{{ $pasiens->previousPageUrl() }}"
+                                                <a class="page-link" href="{{ $obat->previousPageUrl() }}"
                                                     rel="prev">&laquo;</a>
                                             </li>
                                         @endif
 
                                         {{-- Pagination Elements --}}
-                                        @foreach ($pasiens->getUrlRange(1, $pasiens->lastPage()) as $page => $url)
-                                            @if ($page == $pasiens->currentPage())
+                                        @foreach ($obat->getUrlRange(1, $obat->lastPage()) as $page => $url)
+                                            @if ($page == $obat->currentPage())
                                                 <li class="page-item active">
                                                     <span class="page-link">{{ $page }}</span>
                                                 </li>
@@ -114,9 +115,9 @@
                                         @endforeach
 
                                         {{-- Next Page Link --}}
-                                        @if ($pasiens->hasMorePages())
+                                        @if ($obat->hasMorePages())
                                             <li class="page-item">
-                                                <a class="page-link" href="{{ $pasiens->nextPageUrl() }}"
+                                                <a class="page-link" href="{{ $obat->nextPageUrl() }}"
                                                     rel="next">&raquo;</a>
                                             </li>
                                         @else
@@ -134,40 +135,53 @@
         </div>
     </div>
 
-    <!-- Create Pasien Modal -->
-    <div class="modal fade" id="createPasienModal" tabindex="-1" role="dialog" aria-labelledby="createPasienModalLabel"
+    <!-- Create Obat Modal -->
+    <div class="modal fade" id="createObatModal" tabindex="-1" role="dialog" aria-labelledby="createObatModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form method="POST" action="{{ route('pasiens.store') }}">
+                <form method="POST" action="{{ route('obat.store') }}">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="createPasienModalLabel">Tambah Pasien Baru</h5>
+                        <h5 class="modal-title" id="createObatModalLabel">Tambah Obat Baru</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="nik">NIK</label>
-                            <input type="text" class="form-control" id="nik" name="nik" required
-                                maxlength="16">
+                            <label for="kode_obat">Kode Obat</label>
+                            <input type="text" class="form-control" id="kode_obat" name="kode_obat"
+                                value="{{ $nextKodeObat }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="merk">Merk</label>
+                            <input type="text" class="form-control" id="merk" name="merk" required>
                         </div>
                         <div class="form-group">
                             <label for="nama">Nama</label>
                             <input type="text" class="form-control" id="nama" name="nama" required>
                         </div>
                         <div class="form-group">
-                            <label for="tanggal_lahir">Tanggal Lahir</label>
-                            <input type="date" class="form-control" id="tanggal_lahir" name="tanggal_lahir" required>
+                            <label for="jenis">Jenis</label>
+                            <input type="text" class="form-control" id="jenis" name="jenis" required>
                         </div>
                         <div class="form-group">
-                            <label for="alamat">Alamat</label>
-                            <textarea class="form-control" id="alamat" name="alamat" required></textarea>
+                            <label for="kegunaan">Kegunaan</label>
+                            <textarea class="form-control" id="kegunaan" name="kegunaan" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="no_hp">No HP</label>
-                            <input type="text" class="form-control" id="no_hp" name="no_hp" required>
+                            <label for="harga">Harga</label>
+                            <input type="number" class="form-control" id="harga" name="harga" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="satuan">Satuan</label>
+                            <select class="form-control" id="satuan" name="satuan" required>
+                                <option value="">Pilih Satuan</option>
+                                @foreach ($satuanOptions as $option)
+                                    <option value="{{ $option }}">{{ $option }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -179,40 +193,60 @@
         </div>
     </div>
 
-    @foreach ($pasiens as $pasien)
-        <!-- Edit Pasien Modal -->
-        <div class="modal fade" id="editPasienModal{{ $pasien->nik }}" tabindex="-1" role="dialog"
-            aria-labelledby="editPasienModalLabel{{ $pasien->nik }}" aria-hidden="true">
+    @foreach ($obat as $item)
+        <!-- Edit Obat Modal -->
+        <div class="modal fade" id="editObatModal{{ $item->id }}" tabindex="-1" role="dialog"
+            aria-labelledby="editObatModalLabel{{ $item->id }}" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form method="POST" action="{{ route('pasiens.update', $pasien->nik) }}">
+                    <form method="POST" action="{{ route('obat.update', $item->id) }}">
                         @csrf
                         @method('PUT')
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editPasienModalLabel{{ $pasien->nik }}">Edit Data Pasien</h5>
+                            <h5 class="modal-title" id="editObatModalLabel{{ $item->id }}">Edit Data Obat</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="nama{{ $pasien->nik }}">Nama</label>
-                                <input type="text" class="form-control" id="nama{{ $pasien->nik }}" name="nama"
-                                    value="{{ $pasien->nama }}" required>
+                                <label for="kode_obat{{ $item->id }}">Kode Obat</label>
+                                <input type="text" class="form-control" id="kode_obat{{ $item->id }}"
+                                    name="kode_obat" value="{{ $item->kode_obat }}" readonly>
                             </div>
                             <div class="form-group">
-                                <label for="tanggal_lahir{{ $pasien->nik }}">Tanggal Lahir</label>
-                                <input type="date" class="form-control" id="tanggal_lahir{{ $pasien->nik }}"
-                                    name="tanggal_lahir" value="{{ $pasien->tanggal_lahir->format('Y-m-d') }}" required>
+                                <label for="merk{{ $item->id }}">Merk</label>
+                                <input type="text" class="form-control" id="merk{{ $item->id }}" name="merk"
+                                    value="{{ $item->merk }}" required>
                             </div>
                             <div class="form-group">
-                                <label for="alamat{{ $pasien->nik }}">Alamat</label>
-                                <textarea class="form-control" id="alamat{{ $pasien->nik }}" name="alamat" required>{{ $pasien->alamat }}</textarea>
+                                <label for="nama{{ $item->id }}">Nama</label>
+                                <input type="text" class="form-control" id="nama{{ $item->id }}" name="nama"
+                                    value="{{ $item->nama }}" required>
                             </div>
                             <div class="form-group">
-                                <label for="no_hp{{ $pasien->nik }}">No HP</label>
-                                <input type="text" class="form-control" id="no_hp{{ $pasien->nik }}" name="no_hp"
-                                    value="{{ $pasien->no_hp }}" required>
+                                <label for="jenis{{ $item->id }}">Jenis</label>
+                                <input type="text" class="form-control" id="jenis{{ $item->id }}" name="jenis"
+                                    value="{{ $item->jenis }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="kegunaan{{ $item->id }}">Kegunaan</label>
+                                <textarea class="form-control" id="kegunaan{{ $item->id }}" name="kegunaan" required>{{ $item->kegunaan }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="harga{{ $item->id }}">Harga</label>
+                                <input type="number" class="form-control" id="harga{{ $item->id }}" name="harga"
+                                    value="{{ $item->harga }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="satuan{{ $item->id }}">Satuan</label>
+                                <select class="form-control" id="satuan{{ $item->id }}" name="satuan" required>
+                                    <option value="">Pilih Satuan</option>
+                                    @foreach ($satuanOptions as $option)
+                                        <option value="{{ $option }}"
+                                            {{ $item->satuan == $option ? 'selected' : '' }}>{{ $option }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -225,11 +259,13 @@
         </div>
     @endforeach
 
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function confirmDelete(nik) {
+        function confirmDelete(id) {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
-                text: "Data pasien ini akan dihapus permanen!",
+                text: "Data obat ini akan dihapus permanen!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -238,7 +274,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + nik).submit();
+                    document.getElementById('delete-form-' + id).submit();
                 }
             });
         }
