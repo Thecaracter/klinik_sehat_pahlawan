@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Obatmasuk;
-use App\Models\Obat;
-use Illuminate\Http\Request;
+
 use Exception;
+use App\Models\Obat;
+use App\Models\ObatMasuk;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -13,7 +14,7 @@ class ObatMasukController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Obatmasuk::with('obat');
+        $query = ObatMasuk::with('obat');
 
         if ($request->has('start_date') && $request->has('end_date')) {
             $start_date = $request->start_date;
@@ -42,7 +43,7 @@ class ObatMasukController extends Controller
 
         DB::beginTransaction();
         try {
-            $obatmasuk = Obatmasuk::create($request->all());
+            $obatmasuk = ObatMasuk::create($request->all());
 
             $obat = Obat::findOrFail($request->obat_id);
             $obat->tambahStok($request->jumlah);
