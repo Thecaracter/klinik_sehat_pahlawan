@@ -75,10 +75,10 @@
                         <p>Obat Masuk</p>
                     </a>
                 </li>
-                <li class="nav-item {{ Request::path() == 'admin/pesanan' ? 'active' : '' }}">
-                    <a href="{{ url('admin/pesanan') }}">
-                        <i class="fas fa-shopping-cart"></i>
-                        <p>Pesanan</p>
+                <li class="nav-item {{ Request::path() == 'kunjungan' ? 'active' : '' }}">
+                    <a href="{{ url('kunjungan') }}">
+                        <i class="fas fa-stethoscope"></i>
+                        <p>Kunjungan</p>
                     </a>
                 </li>
                 <li class="nav-item {{ Request::path() == 'admin/riwayat' ? 'active' : '' }}">

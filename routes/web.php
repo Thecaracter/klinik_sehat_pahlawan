@@ -6,6 +6,7 @@ use App\Http\Controllers\ObatController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\ObatMasukController;
 
 /*
@@ -51,6 +52,15 @@ Route::middleware('isLogin')->group(function () {
     Route::post('/obatmasuk', [ObatMasukController::class, 'store'])->name('obatmasuk.store');
     Route::put('/obatmasuk/{obatmasuk}', [ObatMasukController::class, 'update'])->name('obatmasuk.update');
     Route::delete('/obatmasuk/{obatmasuk}', [ObatMasukController::class, 'destroy'])->name('obatmasuk.destroy');
+
+    //kunjungan routes
+    Route::get('/kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
+    Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
+    Route::put('/kunjungan/{kunjungan}', [KunjunganController::class, 'update'])->name('kunjungan.update');
+    Route::delete('/kunjungan/{kunjungan}', [KunjunganController::class, 'destroy'])->name('kunjungan.destroy');
+    Route::post('/kunjungan/check-nik', [KunjunganController::class, 'checkNik'])->name('kunjungan.checkNik');
+    Route::delete('/kunjungan/foto/{foto}', [KunjunganController::class, 'deleteFoto'])->name('kunjungan.deleteFoto');
+    Route::post('/kunjungan/{kunjungan}/add-photo', [KunjunganController::class, 'addPhoto'])->name('kunjungan.addPhoto');
 
 });
 
