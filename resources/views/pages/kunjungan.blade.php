@@ -28,8 +28,8 @@
                                     <thead>
                                         <tr>
                                             <th>NIK Pasien</th>
+                                            <th>Nama Pasien</th>
                                             <th>Ditangani Oleh</th>
-                                            <th>Tanggal</th>
                                             <th>Keluhan</th>
                                             <th>Status</th>
                                             <th>Foto</th>
@@ -40,8 +40,9 @@
                                         @forelse ($kunjungans as $kunjungan)
                                             <tr>
                                                 <td>{{ $kunjungan->pasien_nik }}</td>
+                                                <td>{{ $kunjungan->pasien->nama }}</td>
                                                 <td>{{ $kunjungan->ditangani_oleh }}</td>
-                                                <td>{{ $kunjungan->tanggal->format('d-m-Y') }}</td>
+
                                                 <td>{{ $kunjungan->keluhan }}</td>
                                                 <td>{{ $kunjungan->status }}</td>
                                                 <td>
@@ -58,6 +59,7 @@
                                                     </button>
                                                     <button class="btn btn-sm btn-danger"
                                                         onclick="confirmDelete('{{ $kunjungan->id }}')">Hapus</button>
+                                                    <br>
                                                     <button type="button" class="btn btn-sm btn-primary"
                                                         data-toggle="modal"
                                                         data-target="#addPhotoModal{{ $kunjungan->id }}">

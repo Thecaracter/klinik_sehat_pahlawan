@@ -40,4 +40,8 @@ class Kunjungan extends Model
     {
         return $this->hasMany(FotoKunjungan::class);
     }
+    public function detailKunjungans()
+    {
+        return $this->hasMany(DetailKunjungan::class, 'id_kunjungan');
+    }
 }

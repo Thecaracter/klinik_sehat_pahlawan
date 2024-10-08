@@ -7,6 +7,7 @@
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="{{ asset('admin/assets/img/kaiadmin/favicon.ico') }}" type="image/x-icon" />
     <link rel="stylesheet" href="{{ asset('custom/css/pagination.css') }}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
 
     <!-- Fonts and icons -->
     <script src="{{ asset('admin/assets/js/plugin/webfont/webfont.min.js') }}"></script>
@@ -87,6 +88,20 @@
     <script src="{{ asset('admin/assets/js/setting-demo2.js') }}"></script>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+    <script>
+        Fancybox.bind("[data-fancybox]", {
+            loop: true, // Memungkinkan navigasi melingkar
+            buttons: [
+                "zoom",
+                "slideShow",
+                "fullScreen",
+                "download",
+                "thumbs",
+                "close"
+            ],
+        });
+    </script>
 
 </body>
 

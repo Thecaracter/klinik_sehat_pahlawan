@@ -15,7 +15,7 @@ class KunjunganController extends Controller
 {
     public function index()
     {
-        $kunjungans = Kunjungan::where('status', 'belum_selesai')->with('fotoKunjungan')->get();
+        $kunjungans = Kunjungan::where('status', 'belum selesai')->with('fotoKunjungan', 'pasien')->get();
         return view('pages.kunjungan', compact('kunjungans'));
     }
 
@@ -49,7 +49,7 @@ class KunjunganController extends Controller
             ]);
 
             $validatedData['user_id'] = Auth::id();
-            $validatedData['status'] = 'belum_selesai';
+            $validatedData['status'] = 'belum selesai';
 
             $kunjungan = Kunjungan::create($validatedData);
 

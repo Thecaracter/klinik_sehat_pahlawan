@@ -3,7 +3,7 @@
     <div class="sidebar-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
-            <a class="navbar-brand d-flex align-items-center" href="{{ url('/') }}">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url('/dashboard') }}">
                 <img src="{{ asset('custom/assetsFoto/logo.jpeg') }}" alt="Logo Klinik" class="logo-fluid"
                     style="height: 50px; width: auto; margin-right: 15px;margin-left: 15px;">
                 <span class="brand-text" style="color: white; font-size: 20px; font-weight: bold; line-height: 1.2;">
@@ -81,11 +81,17 @@
                         <p>Kunjungan</p>
                     </a>
                 </li>
-                <li class="nav-item {{ Request::path() == 'admin/riwayat' ? 'active' : '' }}">
-                    <a href="{{ url('admin/riwayat') }}">
-                        <i class="fas fa-book"></i>
-                        <p>Riwayat</p>
+                <li class="nav-item {{ Request::path() == 'pemeriksaan' ? 'active' : '' }}">
+                    <a href="{{ url('pemeriksaan') }}">
+                        <i class="fas fa-notes-medical"></i>
+                        <p>Pemeriksaan</p>
                     </a>
+                </li>
+                <li class="nav-section">
+                    <span class="sidebar-mini-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </span>
+                    <h4 class="text-section">Riwayat & Pembayaran</h4>
                 </li>
             </ul>
         </div>

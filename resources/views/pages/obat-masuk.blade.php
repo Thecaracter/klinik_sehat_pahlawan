@@ -74,13 +74,17 @@
                                                 <td>{{ number_format($item->harga_beli, 0, ',', '.') }}</td>
                                                 <td>{{ $item->tanggal_kadaluarsa->format('d-m-Y') }}</td>
                                                 <td>
-                                                    <button type="button" class="btn btn-sm btn-warning"
-                                                        data-toggle="modal"
-                                                        data-target="#editObatMasukModal{{ $item->id }}">
-                                                        Edit
-                                                    </button>
-                                                    <button class="btn btn-sm btn-danger"
-                                                        onclick="confirmDelete('{{ $item->id }}')">Hapus</button>
+                                                    <div class="d-flex justify-content-start align-items-center">
+                                                        <button type="button" class="btn btn-sm btn-warning mr-2"
+                                                            data-toggle="modal"
+                                                            data-target="#editObatMasukModal{{ $item->id }}">
+                                                            Edit
+                                                        </button>
+                                                        <button class="btn btn-sm btn-danger"
+                                                            onclick="confirmDelete('{{ $item->id }}')">
+                                                            Hapus
+                                                        </button>
+                                                    </div>
                                                     <form id="delete-form-{{ $item->id }}"
                                                         action="{{ route('obatmasuk.destroy', $item->id) }}" method="POST"
                                                         style="display: none;">

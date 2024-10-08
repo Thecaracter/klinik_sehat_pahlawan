@@ -8,6 +8,7 @@ use App\Http\Controllers\PasienController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\ObatMasukController;
+use App\Http\Controllers\PemeriksaanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,13 @@ Route::middleware('isLogin')->group(function () {
     Route::post('/kunjungan/check-nik', [KunjunganController::class, 'checkNik'])->name('kunjungan.checkNik');
     Route::delete('/kunjungan/foto/{foto}', [KunjunganController::class, 'deleteFoto'])->name('kunjungan.deleteFoto');
     Route::post('/kunjungan/{kunjungan}/add-photo', [KunjunganController::class, 'addPhoto'])->name('kunjungan.addPhoto');
+
+    // Pemeriksaan Routes
+    Route::get('/pemeriksaan', [PemeriksaanController::class, 'index'])->name('pemeriksaan.index');
+    Route::put('/pemeriksaan/{kunjungan}', [PemeriksaanController::class, 'update'])->name('pemeriksaan.update');
+    Route::post('/pemeriksaan/{kunjungan}/upload-foto', [PemeriksaanController::class, 'uploadFoto'])->name('pemeriksaan.uploadFoto');
+    Route::delete('/pemeriksaan/foto/{foto}', [PemeriksaanController::class, 'deleteFoto'])->name('pemeriksaan.deleteFoto');
+    Route::delete('/pemeriksaan/obat/{detailKunjungan}', [PemeriksaanController::class, 'deleteObat'])->name('pemeriksaan.deleteObat');
 
 });
 

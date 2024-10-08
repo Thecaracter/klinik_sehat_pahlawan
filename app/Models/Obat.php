@@ -32,8 +32,8 @@ class Obat extends Model
 
     public function kurangiStok($jumlah)
     {
-        if (!is_numeric($jumlah) || $jumlah <= 0) {
-            throw new Exception("Jumlah harus berupa angka positif");
+        if (!is_numeric($jumlah) || $jumlah < 0) {
+            throw new Exception("Jumlah harus berupa angka non-negatif");
         }
 
         $jumlah = round($jumlah, 2);  // Pembulatan ke 2 angka desimal
@@ -49,8 +49,8 @@ class Obat extends Model
 
     public function tambahStok($jumlah)
     {
-        if (!is_numeric($jumlah) || $jumlah <= 0) {
-            throw new Exception("Jumlah harus berupa angka positif");
+        if (!is_numeric($jumlah) || $jumlah < 0) {
+            throw new Exception("Jumlah harus berupa angka non-negatif");
         }
 
         $jumlah = round($jumlah, 2);  // Pembulatan ke 2 angka desimal
@@ -63,14 +63,41 @@ class Obat extends Model
     public function formatStok()
     {
         $stok = $this->stok;
-        if ($stok == (int) $stok) {
-            return (int) $stok . " " . $this->satuan;
-        } elseif ($stok * 2 == (int) ($stok * 2)) {
-            return ($stok * 2) . "/2 " . $this->satuan;
-        } elseif ($stok * 4 == (int) ($stok * 4)) {
-            return ($stok * 4) . "/4 " . $this->satuan;
-        } else {
-            return $stok . " " . $this->satuan;
+        $integerPart = floor($stok);
+        $fractionalPart = $stok - $integerPart;
+
+        $formattedStok = '';
+
+        if ($integerPart > 0) {
+            $formattedStok .= $integerPart;
         }
+
+        if ($fractionalPart > 0) {
+            if ($formattedStok !== '') {
+                $formattedStok .= ' ';
+            }
+
+            if (abs($fractionalPart - 0.5) < 0.001) {
+                $formattedStok .= "1/2";
+            } elseif (abs($fractionalPart - 0.25) < 0.001) {
+                $formattedStok .= "1/4";
+            } elseif (abs($fractionalPart - 0.75) < 0.001) {
+                $formattedStok .= "3/4";
+            } else {
+                // Untuk pecahan lainnya, gunakan nilai desimal
+                $formattedStok = number_format($stok, 2);
+            }
+        }
+
+        if ($formattedStok === '') {
+            $formattedStok = '0';
+        }
+
+        return $formattedStok . " " . $this->satuan;
+    }
+
+    public function detailKunjungans()
+    {
+        return $this->hasMany(DetailKunjungan::class, 'id_obat');
     }
 }
