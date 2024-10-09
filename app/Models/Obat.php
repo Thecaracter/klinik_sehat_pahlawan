@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Exception;
 use App\Events\ObatStokHabis;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -64,9 +65,18 @@ class Obat extends Model
 
         $this->stok += $jumlah;
         $this->save();
+
+        // Hapus item dari cache obat_kosong jika stok tidak lagi nol
+        if ($this->stok > 0) {
+            $obatKosong = Cache::get('obat_kosong', []);
+            if (isset($obatKosong[$this->id])) {
+                unset($obatKosong[$this->id]);
+                Cache::put('obat_kosong', $obatKosong);
+            }
+        }
+
         return true;
     }
-
     public function formatStok()
     {
         $stok = $this->stok;
