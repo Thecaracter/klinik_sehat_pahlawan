@@ -5,9 +5,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\ObatMasukController;
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PemeriksaanController;
 
 /*
@@ -70,5 +72,11 @@ Route::middleware('isLogin')->group(function () {
     Route::delete('/pemeriksaan/foto/{foto}', [PemeriksaanController::class, 'deleteFoto'])->name('pemeriksaan.deleteFoto');
     Route::delete('/pemeriksaan/obat/{detailKunjungan}', [PemeriksaanController::class, 'deleteObat'])->name('pemeriksaan.deleteObat');
 
+    // Pembayaran Routes
+    Route::get('/pembayaran', [PembayaranController::class, 'index'])->name('pembayaran.index');
+    Route::post('/pembayaran', [PembayaranController::class, 'store'])->name('pembayaran.store');
+
+    // Riwayat Routes
+    Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
 });
 

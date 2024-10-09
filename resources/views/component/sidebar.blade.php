@@ -91,7 +91,19 @@
                     <span class="sidebar-mini-icon">
                         <i class="fa fa-ellipsis-h"></i>
                     </span>
-                    <h4 class="text-section">Riwayat & Pembayaran</h4>
+                    <h4 class="text-section">Pembayaran & Riwayat</h4>
+                </li>
+                <li class="nav-item {{ Request::path() == 'pembayaran' ? 'active' : '' }}">
+                    <a href="{{ url('pembayaran') }}">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <p>Pembayaran</p>
+                    </a>
+                </li>
+                <li class="nav-item {{ Request::path() == 'riwayat' ? 'active' : '' }}">
+                    <a href="{{ url('riwayat') }}">
+                        <i class="fas fa-history"></i>
+                        <p>Riwayat Kunjungan</p>
+                    </a>
                 </li>
             </ul>
         </div>

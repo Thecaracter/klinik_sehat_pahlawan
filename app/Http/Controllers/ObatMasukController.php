@@ -21,8 +21,6 @@ class ObatMasukController extends Controller
             $end_date = $request->end_date;
             $query->whereBetween('created_at', [$start_date, $end_date]);
         }
-
-        // Menambahkan pengurutan ascending berdasarkan created_at
         $query->orderBy('created_at', 'desc');
 
         $obatmasuk = $query->paginate(10);

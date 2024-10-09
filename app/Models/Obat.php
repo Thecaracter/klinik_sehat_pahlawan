@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use Exception;
+use App\Events\ObatStokHabis;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Exception;
 
 class Obat extends Model
 {
@@ -36,7 +37,7 @@ class Obat extends Model
             throw new Exception("Jumlah harus berupa angka non-negatif");
         }
 
-        $jumlah = round($jumlah, 2);  // Pembulatan ke 2 angka desimal
+        $jumlah = round($jumlah, 2);
 
         if ($this->stok < $jumlah) {
             throw new Exception("Stok tidak mencukupi");
@@ -44,6 +45,12 @@ class Obat extends Model
 
         $this->stok -= $jumlah;
         $this->save();
+
+        if ($this->stok == 0) {
+            \Log::info('ObatStokHabis event triggered for obat: ' . $this->nama);
+            event(new ObatStokHabis($this));
+        }
+
         return true;
     }
 
