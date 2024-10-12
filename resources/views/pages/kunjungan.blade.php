@@ -137,6 +137,7 @@
                             <select class="form-control" id="ditangani_oleh" name="ditangani_oleh" required>
                                 <option value="dokter">Dokter</option>
                                 <option value="bidan">Bidan</option>
+                                <option value="perawat">Perawat</option>
                             </select>
                         </div>
                         <div class="form-group">

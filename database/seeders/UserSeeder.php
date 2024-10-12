@@ -41,5 +41,13 @@ class UserSeeder extends Seeder
                 'role' => 'bidan',
             ]);
         }
+        for ($i = 0; $i < 7; $i++) {
+            User::create([
+                'name' => $faker->name,
+                'email' => $faker->unique()->safeEmail,
+                'password' => Hash::make('password'),
+                'role' => 'perawat',
+            ]);
+        }
     }
 }
