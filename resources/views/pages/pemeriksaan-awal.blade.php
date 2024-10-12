@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Daftar Pemeriksaan')
+@section('title', 'Pemeriksaan Awal')
 @section('content')
     <div class="container">
         <div class="page-inner">
@@ -29,7 +29,6 @@
                                             <th>Tanggal</th>
                                             <th>Keluhan</th>
                                             <th>Umur</th>
-                                            <th>Pemeriksaan Awal</th>
                                             <th>Foto</th>
                                             <th>Riwayat</th>
                                             <th>Aksi</th>
@@ -44,7 +43,6 @@
                                                 <td>{{ $kunjungan->keluhan }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($kunjungan->pasien->tanggal_lahir)->age }}
                                                     tahun</td>
-                                                <td>{{ $kunjungan->pemeriksaan_awal }}</td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-info" data-toggle="modal"
                                                         data-target="#showPhotosModal{{ $kunjungan->id }}">
@@ -53,8 +51,7 @@
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-secondary"
-                                                        data-toggle="modal"
-                                                        data-target="#riwayatModal{{ $kunjungan->id }}">
+                                                        data-toggle="modal" data-target="#riwayatModal{{ $kunjungan->id }}">
                                                         Lihat Riwayat
                                                     </button>
                                                 </td>
@@ -92,11 +89,11 @@
             aria-labelledby="pemeriksaanModalLabel{{ $kunjungan->id }}" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
-                    <form method="POST" action="{{ route('pemeriksaan.update', $kunjungan->id) }}">
+                    <form method="POST" action="{{ route('pemeriksaan_awal.update', $kunjungan->id) }}">
                         @csrf
                         @method('PUT')
                         <div class="modal-header">
-                            <h5 class="modal-title" id="pemeriksaanModalLabel{{ $kunjungan->id }}">Pemeriksaan
+                            <h5 class="modal-title" id="pemeriksaanModalLabel{{ $kunjungan->id }}">Pemeriksaan Awal
                                 {{ $kunjungan->pasien->nama }}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
@@ -104,57 +101,13 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="diagnosa{{ $kunjungan->id }}">Diagnosa</label>
-                                <textarea class="form-control" id="diagnosa{{ $kunjungan->id }}" name="diagnosa" required>{{ old('diagnosa', $kunjungan->diagnosa) }}</textarea>
+                                <label for="pemeriksaan_awal{{ $kunjungan->id }}">Pemeriksaan Awal</label>
+                                <textarea class="form-control" id="pemeriksaan_awal{{ $kunjungan->id }}" name="pemeriksaan_awal" required>{{ old('pemeriksaan_awal', $kunjungan->pemeriksaan_awal) }}</textarea>
                             </div>
-                            <div class="form-group">
-                                <label for="tindakan{{ $kunjungan->id }}">Tindakan</label>
-                                <textarea class="form-control" id="tindakan{{ $kunjungan->id }}" name="tindakan" required>{{ old('tindakan', $kunjungan->tindakan) }}</textarea>
-                            </div>
-                            <div id="obatContainer{{ $kunjungan->id }}">
-                                <h5>Obat yang Diberikan</h5>
-                                @foreach ($kunjungan->detailKunjungans as $index => $detail)
-                                    <div class="form-row mt-3 obat-row">
-                                        <div class="col-md-3">
-                                            <label>Nama Obat</label>
-                                            <select name="obat_id[]" class="form-control" required>
-                                                @foreach ($obats as $obat)
-                                                    <option value="{{ $obat->id }}"
-                                                        {{ $detail->id_obat == $obat->id ? 'selected' : '' }}
-                                                        data-satuan="{{ $obat->satuan }}">
-                                                        {{ $obat->nama }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label>Jumlah</label>
-                                            <input type="number" name="jumlah_obat[]" class="form-control jumlah-obat"
-                                                placeholder="Jumlah" required step="0.01" min="0"
-                                                value="{{ $detail->jumlah_obat }}">
-                                        </div>
-                                        <div class="col-md-2">
-                                            <label>Satuan</label>
-                                            <input type="text" class="form-control satuan-obat" readonly
-                                                value="{{ $detail->obat->satuan }}">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label>Instruksi</label>
-                                            <input type="text" name="instruksi[]" class="form-control"
-                                                placeholder="Instruksi" required value="{{ $detail->instruksi }}">
-                                        </div>
-                                        <div class="col-md-1 d-flex align-items-end">
-                                            <button type="button" class="btn btn-danger btn-sm delete-obat">Hapus</button>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                            <button type="button" class="btn btn-secondary mt-2"
-                                onclick="addObatInput({{ $kunjungan->id }})">Tambah Obat</button>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan Pemeriksaan</button>
+                            <button type="submit" class="btn btn-primary">Simpan Pemeriksaan Awal</button>
                         </div>
                     </form>
                 </div>
@@ -166,7 +119,7 @@
             aria-labelledby="addPhotoModalLabel{{ $kunjungan->id }}" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form method="POST" action="{{ route('pemeriksaan.uploadFoto', $kunjungan->id) }}"
+                    <form method="POST" action="{{ route('pemeriksaan_awal.uploadFoto', $kunjungan->id) }}"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="modal-header">
@@ -212,7 +165,7 @@
                                 <div class="col-md-4 mb-3">
                                     <img src="{{ asset($foto->foto) }}" alt="{{ $foto->nama }}" class="img-fluid">
                                     <p>{{ $foto->nama }}</p>
-                                    <form action="{{ route('pemeriksaan.deleteFoto', $foto->id) }}" method="POST">
+                                    <form action="{{ route('pemeriksaan_awal.deleteFoto', $foto->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
@@ -306,81 +259,6 @@
                 $(this).find('[id^=fotoNameContainer]').html('');
             });
         });
-
-        function addObatInput(kunjunganId) {
-            const container = document.getElementById('obatContainer' + kunjunganId);
-            const obatInput = `
-        <div class="row mb-3 obat-row align-items-start">
-            <div class="col-md-5">
-                <div class="form-group mb-2">
-                    <label for="obat_id" class="form-label">Nama Obat</label>
-                    <select name="obat_id[]" class="form-control" required>
-                        <option value="">Pilih Obat</option>
-                        @foreach ($obats as $obat)
-                            <option value="{{ $obat->id }}" data-satuan="{{ $obat->satuan }}">{{ $obat->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group mb-2">
-                    <label for="jumlah_obat" class="form-label">Jumlah</label>
-                    <div class="d-flex">
-                        <div class="input-group flex-grow-1 mr-2">
-                            <input type="number" name="jumlah_obat[]" class="form-control jumlah-obat" placeholder="Jumlah" required step="0.01" min="0">
-                            <div class="input-group-append">
-                                <span class="input-group-text satuan-obat" style="min-width: 60px; height: 40px;">-</span>
-                            </div>
-                        </div>
-                       
-                        
-                    </div>
-                </div>
-                <button type="button" class="btn btn-danger btn-sm delete-obat" style="align-self: flex-end; margin-left: 10px;">Hapus</button>
-            </div>
-            <div class="col-md-7">
-                <div class="form-group">
-                    <label for="instruksi" class="form-label">Instruksi Penggunaan</label>
-                    <textarea name="instruksi[]" class="form-control" 
-                              style="resize: none; height: 100px;" 
-                              placeholder="Tuliskan instruksi penggunaan obat secara detail di sini" required></textarea>
-                </div>
-            </div>
-        </div>
-    `;
-            container.insertAdjacentHTML('beforeend', obatInput);
-
-            // Add event listeners to the new row
-            addEventListenersToObatRow(container.lastElementChild);
-        }
-
-        function addEventListenersToObatRow(row) {
-            const selectObat = row.querySelector('select[name="obat_id[]"]');
-            const inputJumlah = row.querySelector('.jumlah-obat');
-            const spanSatuan = row.querySelector('.satuan-obat');
-            const deleteButton = row.querySelector('.delete-obat');
-
-            selectObat.addEventListener('change', function() {
-                const selectedOption = this.options[this.selectedIndex];
-                const satuan = selectedOption.getAttribute('data-satuan');
-                spanSatuan.textContent = satuan || '-';
-            });
-
-            inputJumlah.addEventListener('input', function() {
-                validateJumlahObat(this);
-            });
-
-            deleteButton.addEventListener('click', function() {
-                row.remove();
-            });
-        }
-
-        function validateJumlahObat(input) {
-            const value = parseFloat(input.value);
-            if (isNaN(value) || value < 0) {
-                input.setCustomValidity('Jumlah harus 0 atau lebih');
-            } else {
-                input.setCustomValidity('');
-            }
-        }
 
         function handleFileSelect(input) {
             const container = document.getElementById('fotoNameContainer' + input.id.replace('foto', ''));

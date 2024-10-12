@@ -16,36 +16,36 @@ class PasienController extends Controller
             $query = Pasien::query()->orderBy('created_at', 'desc');
 
             if ($search) {
-                $query->where('nik', 'LIKE', "%{$search}%")
-                    ->orWhere('nama', 'LIKE', "%{$search}%")
-                    ->orWhere('alamat', 'LIKE', "%{$search}%");
+                $query->where(function ($q) use ($search) {
+                    $q->where('nik', 'LIKE', "%{$search}%")
+                        ->orWhere('nama', 'LIKE', "%{$search}%")
+                        ->orWhere('alamat', 'LIKE', "%{$search}%");
+                });
             }
 
             $pasiens = $query->paginate(10);
-            $satuanOptions = ['Tablet', 'Kapsul', 'Botol', 'Ampul', 'Vial', 'Tube', 'Sachet', 'Strip'];
 
-            return view('pages.pasien', compact('pasiens', 'satuanOptions'));
+            return view('pages.pasien', compact('pasiens'));
         } catch (Exception $e) {
             Log::error('Error fetching pasiens: ' . $e->getMessage());
             return back()->with('error', 'Terjadi kesalahan saat mengambil data pasien.');
         }
     }
 
-
     public function store(Request $request)
     {
         try {
             $validatedData = $request->validate([
-                'nik' => 'required|string|unique:pasien,nik|max:16',
+                'nik' => 'nullable|string|unique:pasien,nik|max:16',
                 'nama' => 'required|string|max:255',
                 'tanggal_lahir' => 'required|date',
                 'alamat' => 'required|string',
                 'no_hp' => 'required|string|max:15',
             ]);
 
-            Pasien::create($validatedData);
+            $pasien = Pasien::create($validatedData);
 
-            Log::info('New pasien created: ' . $validatedData['nik']);
+            Log::info('New pasien created: ' . $pasien->id);
             return redirect()->route('pasiens.index')->with('success', 'Pasien berhasil ditambahkan.');
         } catch (Exception $e) {
             Log::error('Error creating pasien: ' . $e->getMessage());
@@ -53,12 +53,13 @@ class PasienController extends Controller
         }
     }
 
-    public function update(Request $request, $nik)
+    public function update(Request $request, $id)
     {
         try {
-            $pasien = Pasien::findOrFail($nik);
+            $pasien = Pasien::findOrFail($id);
 
             $validatedData = $request->validate([
+                'nik' => 'nullable|string|unique:pasien,nik,' . $id . ',id|max:16',
                 'nama' => 'required|string|max:255',
                 'tanggal_lahir' => 'required|date',
                 'alamat' => 'required|string',
@@ -67,7 +68,7 @@ class PasienController extends Controller
 
             $pasien->update($validatedData);
 
-            Log::info('Pasien updated: ' . $nik);
+            Log::info('Pasien updated: ' . $id);
             return redirect()->route('pasiens.index')->with('success', 'Data pasien berhasil diperbarui.');
         } catch (Exception $e) {
             Log::error('Error updating pasien: ' . $e->getMessage());
@@ -75,13 +76,13 @@ class PasienController extends Controller
         }
     }
 
-    public function destroy($nik)
+    public function destroy($id)
     {
         try {
-            $pasien = Pasien::findOrFail($nik);
+            $pasien = Pasien::findOrFail($id);
             $pasien->delete();
 
-            Log::info('Pasien deleted: ' . $nik);
+            Log::info('Pasien deleted: ' . $id);
             return redirect()->route('pasiens.index')->with('success', 'Data pasien berhasil dihapus.');
         } catch (Exception $e) {
             Log::error('Error deleting pasien: ' . $e->getMessage());

@@ -12,9 +12,11 @@ class PasienSeeder extends Seeder
     {
         $faker = Faker::create('id_ID');
 
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 20; $i++) {
+            $nik = $faker->boolean(90) ? $faker->unique()->numerify('################') : null;
+
             Pasien::create([
-                'nik' => $faker->unique()->numerify('################'),
+                'nik' => $nik,
                 'nama' => $faker->name,
                 'tanggal_lahir' => $faker->date('Y-m-d', '-18 years'),
                 'alamat' => $faker->address,

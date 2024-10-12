@@ -12,17 +12,18 @@ return new class extends Migration {
     {
         Schema::create('kunjungan', function (Blueprint $table) {
             $table->id();
-            $table->string('pasien_nik');
+            $table->unsignedBigInteger('pasien_id');
             $table->unsignedBigInteger('user_id');
             $table->string('ditangani_oleh');
             $table->date('tanggal');
             $table->text('keluhan');
+            $table->text('pemeriksaan_awal')->nullable();
             $table->text('diagnosa')->nullable();
             $table->text('tindakan')->nullable();
             $table->string('status')->default('belum_selesai');
             $table->timestamps();
 
-            $table->foreign('pasien_nik')->references('nik')->on('pasien')->onDelete('cascade');
+            $table->foreign('pasien_id')->references('id')->on('pasien')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

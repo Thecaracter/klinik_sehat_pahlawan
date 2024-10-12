@@ -28,12 +28,12 @@ class PemeriksaanController extends Controller
             $query->where('ditangani_oleh', 'bidan');
         }
 
-        $kunjungans = $query->where('status', 'belum selesai')->get();
+        $kunjungans = $query->where('status', 'selesai pemeriksaan awal')->get();
         $obats = Obat::all();
 
         // Fetch riwayat kunjungan for each pasien
         foreach ($kunjungans as $kunjungan) {
-            $riwayatKunjungan = Kunjungan::where('pasien_nik', $kunjungan->pasien_nik)
+            $riwayatKunjungan = Kunjungan::where('pasien_id', $kunjungan->pasien_id)
                 ->where('id', '!=', $kunjungan->id)
                 ->where('status', 'sudah ditangani')
                 ->with(['fotoKunjungan', 'detailKunjungans.obat'])
@@ -51,6 +51,7 @@ class PemeriksaanController extends Controller
 
         try {
             $validatedData = $request->validate([
+                'pemeriksaan_awal' => 'nullable|string',
                 'diagnosa' => 'required|string',
                 'tindakan' => 'required|string',
                 'obat_id' => 'array',

@@ -39,6 +39,7 @@
                                 <table class="display table table-striped table-hover">
                                     <thead>
                                         <tr>
+                                            <th class="px-4 py-2">No Pasien</th>
                                             <th class="px-4 py-2">NIK</th>
                                             <th class="px-4 py-2">Nama</th>
                                             <th class="px-4 py-2">Umur</th>
@@ -48,46 +49,44 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if ($pasiens->isEmpty())
+                                        @forelse ($pasiens as $pasien)
+                                            <tr>
+                                                <td>PSN{{ $pasien->id }}</td>
+                                                <td>{{ $pasien->nik ?? 'N/A' }}</td>
+                                                <td>{{ $pasien->nama }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($pasien->tanggal_lahir)->age }} tahun</td>
+                                                <td>{{ $pasien->alamat }}</td>
+                                                <td>{{ $pasien->no_hp }}</td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <button type="button" class="btn btn-sm btn-warning"
+                                                            data-toggle="modal"
+                                                            data-target="#editPasienModal{{ $pasien->id }}">
+                                                            Edit
+                                                        </button>
+                                                        <button class="btn btn-sm btn-danger"
+                                                            onclick="confirmDelete('{{ $pasien->id }}')">Hapus</button>
+                                                    </div>
+                                                    <form id="delete-form-{{ $pasien->id }}"
+                                                        action="{{ route('pasiens.destroy', $pasien->id) }}" method="POST"
+                                                        style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @empty
                                             <tr>
                                                 <td colspan="6" class="text-center">Tidak ada data pasien untuk
                                                     ditampilkan</td>
                                             </tr>
-                                        @else
-                                            @foreach ($pasiens as $pasien)
-                                                <tr>
-                                                    <td>{{ $pasien->nik }}</td>
-                                                    <td>{{ $pasien->nama }}</td>
-                                                    <td>{{ \Carbon\Carbon::parse($pasien->tanggal_lahir)->age }} tahun</td>
-                                                    <td>{{ $pasien->alamat }}</td>
-                                                    <td>{{ $pasien->no_hp }}</td>
-                                                    <td>
-                                                        <div class="btn-group" role="group">
-                                                            <button type="button" class="btn btn-sm btn-warning"
-                                                                data-toggle="modal"
-                                                                data-target="#editPasienModal{{ $pasien->nik }}">
-                                                                Edit
-                                                            </button>
-                                                            <button class="btn btn-sm btn-danger"
-                                                                onclick="confirmDelete('{{ $pasien->nik }}')">Hapus</button>
-                                                        </div>
-                                                        <form id="delete-form-{{ $pasien->nik }}"
-                                                            action="{{ route('pasiens.destroy', $pasien->nik) }}"
-                                                            method="POST" style="display: none;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
                             @if ($pasiens->hasPages())
                                 <nav>
                                     <ul class="pagination">
-                                        {{-- Previous Page Link --}}
                                         @if ($pasiens->onFirstPage())
                                             <li class="page-item disabled">
                                                 <span class="page-link">&laquo;</span>
@@ -99,7 +98,6 @@
                                             </li>
                                         @endif
 
-                                        {{-- Pagination Elements --}}
                                         @foreach ($pasiens->getUrlRange(1, $pasiens->lastPage()) as $page => $url)
                                             @if ($page == $pasiens->currentPage())
                                                 <li class="page-item active">
@@ -113,7 +111,6 @@
                                             @endif
                                         @endforeach
 
-                                        {{-- Next Page Link --}}
                                         @if ($pasiens->hasMorePages())
                                             <li class="page-item">
                                                 <a class="page-link" href="{{ $pasiens->nextPageUrl() }}"
@@ -149,9 +146,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="nik">NIK</label>
-                            <input type="text" class="form-control" id="nik" name="nik" required
-                                maxlength="16">
+                            <label for="nik">NIK (Opsional)</label>
+                            <input type="text" class="form-control" id="nik" name="nik" maxlength="16">
                         </div>
                         <div class="form-group">
                             <label for="nama">Nama</label>
@@ -181,37 +177,43 @@
 
     @foreach ($pasiens as $pasien)
         <!-- Edit Pasien Modal -->
-        <div class="modal fade" id="editPasienModal{{ $pasien->nik }}" tabindex="-1" role="dialog"
-            aria-labelledby="editPasienModalLabel{{ $pasien->nik }}" aria-hidden="true">
+        <div class="modal fade" id="editPasienModal{{ $pasien->id }}" tabindex="-1" role="dialog"
+            aria-labelledby="editPasienModalLabel{{ $pasien->id }}" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <form method="POST" action="{{ route('pasiens.update', $pasien->nik) }}">
+                    <form method="POST" action="{{ route('pasiens.update', $pasien->id) }}">
                         @csrf
                         @method('PUT')
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editPasienModalLabel{{ $pasien->nik }}">Edit Data Pasien</h5>
+                            <h5 class="modal-title" id="editPasienModalLabel{{ $pasien->id }}">Edit Data Pasien</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label for="nama{{ $pasien->nik }}">Nama</label>
-                                <input type="text" class="form-control" id="nama{{ $pasien->nik }}" name="nama"
+                                <label for="nik{{ $pasien->id }}">NIK (Opsional)</label>
+                                <input type="text" class="form-control" id="nik{{ $pasien->id }}" name="nik"
+                                    maxlength="16" value="{{ $pasien->nik }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="nama{{ $pasien->id }}">Nama</label>
+                                <input type="text" class="form-control" id="nama{{ $pasien->id }}" name="nama"
                                     value="{{ $pasien->nama }}" required>
                             </div>
                             <div class="form-group">
-                                <label for="tanggal_lahir{{ $pasien->nik }}">Tanggal Lahir</label>
-                                <input type="date" class="form-control" id="tanggal_lahir{{ $pasien->nik }}"
-                                    name="tanggal_lahir" value="{{ $pasien->tanggal_lahir->format('Y-m-d') }}" required>
+                                <label for="tanggal_lahir{{ $pasien->id }}">Tanggal Lahir</label>
+                                <input type="date" class="form-control" id="tanggal_lahir{{ $pasien->id }}"
+                                    name="tanggal_lahir"
+                                    value="{{ \Carbon\Carbon::parse($pasien->tanggal_lahir)->format('Y-m-d') }}" required>
                             </div>
                             <div class="form-group">
-                                <label for="alamat{{ $pasien->nik }}">Alamat</label>
-                                <textarea class="form-control" id="alamat{{ $pasien->nik }}" name="alamat" required>{{ $pasien->alamat }}</textarea>
+                                <label for="alamat{{ $pasien->id }}">Alamat</label>
+                                <textarea class="form-control" id="alamat{{ $pasien->id }}" name="alamat" required>{{ $pasien->alamat }}</textarea>
                             </div>
                             <div class="form-group">
-                                <label for="no_hp{{ $pasien->nik }}">No HP</label>
-                                <input type="text" class="form-control" id="no_hp{{ $pasien->nik }}" name="no_hp"
+                                <label for="no_hp{{ $pasien->id }}">No HP</label>
+                                <input type="text" class="form-control" id="no_hp{{ $pasien->id }}" name="no_hp"
                                     value="{{ $pasien->no_hp }}" required>
                             </div>
                         </div>
@@ -226,7 +228,7 @@
     @endforeach
 
     <script>
-        function confirmDelete(nik) {
+        function confirmDelete(id) {
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: "Data pasien ini akan dihapus permanen!",
@@ -238,7 +240,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + nik).submit();
+                    document.getElementById('delete-form-' + id).submit();
                 }
             });
         }

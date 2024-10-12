@@ -19,21 +19,40 @@ class KunjunganController extends Controller
         return view('pages.kunjungan', compact('kunjungans'));
     }
 
-    public function checkNik(Request $request)
+    public function checkPasienId(Request $request)
     {
-        $request->validate([
-            'nik' => 'required|string'
-        ]);
+        try {
+            $request->validate([
+                'pasien_id' => 'required|integer|exists:pasien,id'
+            ]);
 
-        $nik = $request->input('nik');
-        $pasien = Pasien::where('nik', $nik)->first();
+            $pasien_id = $request->input('pasien_id');
+            $pasien = Pasien::find($pasien_id);
 
-        if ($pasien) {
-            return redirect()->route('kunjungan.index')
-                ->with('showCreateModal', true)
-                ->with('nik', $nik);
-        } else {
-            return redirect()->route('pasiens.index');
+            Log::info('Checking Pasien ID', ['input_id' => $pasien_id, 'found' => $pasien ? true : false]);
+
+            if ($pasien) {
+                Log::info('Pasien found', ['id' => $pasien->id, 'nama' => $pasien->nama]);
+                // Simpan pasien_id yang valid ke dalam session
+                session(['valid_pasien_id' => $pasien_id]);
+                return response()->json([
+                    'success' => true,
+                    'pasien_id' => $pasien_id,
+                    'pasien_nama' => $pasien->nama
+                ]);
+            } else {
+                Log::warning('Pasien not found', ['input_id' => $pasien_id]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Pasien tidak ditemukan.'
+                ], 404);
+            }
+        } catch (Exception $e) {
+            Log::error('Error in checkPasienId', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memeriksa ID pasien.'
+            ], 500);
         }
     }
 
@@ -41,12 +60,19 @@ class KunjunganController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'pasien_nik' => 'required|string',
                 'ditangani_oleh' => 'required|in:dokter,bidan',
                 'tanggal' => 'required|date',
                 'keluhan' => 'required|string',
                 'foto_kunjungan.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
+
+            // Gunakan valid_pasien_id dari session jika ada
+            $validatedData['pasien_id'] = session('valid_pasien_id', $request->input('pasien_id'));
+
+            // Pastikan pasien_id ada dan valid
+            if (!$validatedData['pasien_id']) {
+                throw new Exception('ID Pasien tidak valid.');
+            }
 
             $validatedData['user_id'] = Auth::id();
             $validatedData['status'] = 'belum selesai';
@@ -72,6 +98,9 @@ class KunjunganController extends Controller
                 }
             }
 
+            // Hapus valid_pasien_id dari session setelah digunakan
+            session()->forget('valid_pasien_id');
+
             return redirect()->route('kunjungan.index')->with('success', 'Kunjungan berhasil ditambahkan.');
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -83,7 +112,7 @@ class KunjunganController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'pasien_nik' => 'required|string',
+                'pasien_id' => 'required|integer|exists:pasien,id',
                 'ditangani_oleh' => 'required|in:dokter,bidan',
                 'tanggal' => 'required|date',
                 'keluhan' => 'required|string',
@@ -154,6 +183,7 @@ class KunjunganController extends Controller
             return redirect()->back()->with('error', 'Gagal menghapus foto: ' . $e->getMessage());
         }
     }
+
     public function addPhoto(Request $request, Kunjungan $kunjungan)
     {
         try {

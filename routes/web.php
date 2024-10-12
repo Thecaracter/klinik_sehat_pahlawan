@@ -11,6 +11,7 @@ use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\ObatMasukController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PemeriksaanController;
+use App\Http\Controllers\PemeriksaanAwalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,7 +62,7 @@ Route::middleware('isLogin')->group(function () {
     Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
     Route::put('/kunjungan/{kunjungan}', [KunjunganController::class, 'update'])->name('kunjungan.update');
     Route::delete('/kunjungan/{kunjungan}', [KunjunganController::class, 'destroy'])->name('kunjungan.destroy');
-    Route::post('/kunjungan/check-nik', [KunjunganController::class, 'checkNik'])->name('kunjungan.checkNik');
+    Route::post('/kunjungan/check-pasien-id', [KunjunganController::class, 'checkPasienId'])->name('kunjungan.checkPasienId');  // Updated route
     Route::delete('/kunjungan/foto/{foto}', [KunjunganController::class, 'deleteFoto'])->name('kunjungan.deleteFoto');
     Route::post('/kunjungan/{kunjungan}/add-photo', [KunjunganController::class, 'addPhoto'])->name('kunjungan.addPhoto');
 
@@ -78,5 +79,11 @@ Route::middleware('isLogin')->group(function () {
 
     // Riwayat Routes
     Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+
+    // Pemeriksaan Awal Routes
+    Route::get('/pemeriksaan-awal', [PemeriksaanAwalController::class, 'index'])->name('pemeriksaan_awal.index');
+    Route::put('/pemeriksaan-awal/{kunjungan}', [PemeriksaanAwalController::class, 'update'])->name('pemeriksaan_awal.update');
+    Route::post('/pemeriksaan-awal/{kunjungan}/upload-foto', [PemeriksaanAwalController::class, 'uploadFoto'])->name('pemeriksaan_awal.uploadFoto');
+    Route::delete('/pemeriksaan-awal/foto/{foto}', [PemeriksaanAwalController::class, 'deleteFoto'])->name('pemeriksaan_awal.deleteFoto');
 });
 

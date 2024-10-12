@@ -81,6 +81,12 @@
                         <p>Kunjungan</p>
                     </a>
                 </li>
+                <li class="nav-item {{ Request::path() == 'pemeriksaan-awal' ? 'active' : '' }}">
+                    <a href="{{ url('pemeriksaan-awal') }}">
+                        <i class="fas fa-user-md"></i>
+                        <p>Pemeriksaan Awal</p>
+                    </a>
+                </li>
                 <li class="nav-item {{ Request::path() == 'pemeriksaan' ? 'active' : '' }}">
                     <a href="{{ url('pemeriksaan') }}">
                         <i class="fas fa-notes-medical"></i>

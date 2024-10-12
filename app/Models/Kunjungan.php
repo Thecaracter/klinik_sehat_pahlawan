@@ -12,11 +12,12 @@ class Kunjungan extends Model
     protected $table = 'kunjungan';
 
     protected $fillable = [
-        'pasien_nik',
+        'pasien_id',
         'user_id',
         'ditangani_oleh',
         'tanggal',
         'keluhan',
+        'pemerikasaan_awal',
         'diagnosa',
         'tindakan',
         'status',
@@ -28,7 +29,7 @@ class Kunjungan extends Model
 
     public function pasien()
     {
-        return $this->belongsTo(Pasien::class, 'pasien_nik', 'nik');
+        return $this->belongsTo(Pasien::class, 'pasien_id', 'id');
     }
 
     public function user()
